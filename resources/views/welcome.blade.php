@@ -18,7 +18,7 @@
 
             <div class="flex items-center gap-6 text-sm">
                 <a href="#" class="hover:text-zinc-300 transition">
-                    Home
+                    Dashboard
                 </a>
 
                 <a href="#" class="hover:text-zinc-300 transition">
