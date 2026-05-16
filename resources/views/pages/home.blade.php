@@ -27,6 +27,23 @@
 </section>
 
 <section class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="mb-10">
+        <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs mb-3">
+            Products
+        </p>
+        <h2 class="text-4xl font-bold">
+            You can look
+        </h2>
+    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            @foreach($featuredProducts as $product)
+                <x-product-card :product="$product" />
+            @endforeach
+        </div>
+</section>
+
+
+<section class="max-w-7xl mx-auto px-6 pb-24">
 
     <div class="mb-10">
 

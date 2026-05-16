@@ -12,6 +12,19 @@
 
     @include('partials.navbar')
 
+    @if(session('success'))
+
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 2500)"
+            class="fixed top-24 right-6 z-50 bg-white text-black px-6 py-4 rounded-2xl shadow-2xl"
+        >
+            {{ session('success') }}
+        </div>
+
+    @endif
+
     <main>
         @yield('content')
     </main>

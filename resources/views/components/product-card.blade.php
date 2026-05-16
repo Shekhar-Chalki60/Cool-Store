@@ -1,32 +1,40 @@
-<div class="group">
+@props(['product'])
 
-    <div class="bg-zinc-900 rounded-3xl overflow-hidden mb-4">
+<div class="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden group">
+
+    <div class="aspect-[4/5] bg-zinc-800 overflow-hidden">
 
         <img
-            src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
-            alt="Product"
-            class="w-full h-[420px] object-cover group-hover:scale-105 transition duration-500"
+            src="{{ asset($product->image) }}"
+            alt="{{ $product->name }}"
+            class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
         >
 
     </div>
 
-    <div class="space-y-2">
+    <div class="p-6">
+
+        <p class="text-zinc-500 text-sm mb-2">
+            {{ $product->category->name }}
+        </p>
+
+        <h3 class="text-2xl font-semibold mb-4">
+            {{ $product->name }}
+        </h3>
 
         <div class="flex items-center justify-between">
 
-            <h3 class="font-semibold text-lg">
-                Essential Tee
-            </h3>
+            <p class="text-lg font-bold">
+                ₹{{ number_format($product->price) }}
+            </p>
 
-            <span class="text-zinc-400">
-                ₹1,499
-            </span>
+            <button class="text-sm hover:text-zinc-300 transition">
+                <a href="{{ route('products.show', $product) }}">
+                    View Product
+                </a>
+            </button>
 
         </div>
-
-        <p class="text-zinc-500 text-sm">
-            Oversized minimal streetwear t-shirt.
-        </p>
 
     </div>
 
