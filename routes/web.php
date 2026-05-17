@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/payment/{order}', [PaymentController::class, 'process'])
         ->name('payment.process');
+Route::get('/payment-success/{order}', [PaymentController::class, 'success'])
+    ->name('payment.success');
 
     Route::get('/success/{order}', [PaymentController::class, 'success'])
         ->name('payment.success');

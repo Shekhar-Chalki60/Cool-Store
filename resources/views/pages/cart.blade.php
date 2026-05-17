@@ -4,13 +4,15 @@
 
 <section class="max-w-7xl mx-auto px-6 py-20">
 
-    <div class="mb-14">
+    <!-- Header -->
+
+    <div class="mb-16">
 
         <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs mb-4">
             Shopping Cart
         </p>
 
-        <h1 class="text-5xl font-bold">
+        <h1 class="text-5xl md:text-6xl font-bold">
             Your Cart
         </h1>
 
@@ -18,103 +20,333 @@
 
     @if(count($cart) > 0)
 
-        <div class="space-y-6">
+        @php
+            $total = 0;
 
-            @php
-                $total = 0;
-            @endphp
+            foreach($cart as $item) {
+                $total += $item['price'] * $item['quantity'];
+            }
 
-            @foreach($cart as $id => $item)
+            $shipping = $total > 2999 ? 0 : 199;
+            $finalTotal = $total + $shipping;
+        @endphp
 
-                @php
-                    $total += $item['price'] * $item['quantity'];
-                @endphp
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
 
-                <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 flex items-center justify-between">
+            <!-- LEFT -->
 
-                    <div class="flex items-center gap-6">
+            <div class="lg:col-span-2 space-y-6">
 
-                        <img
-                            src="{{ asset($item['image']) }}"
-                            class="w-24 h-24 object-cover rounded-2xl"
-                        >
+                @foreach($cart as $id => $item)
 
-                        <div>
+                    <div class="bg-zinc-900/70 border border-white/10 rounded-[32px] p-5 md:p-6">
 
-                            <h2 class="text-2xl font-semibold mb-2">
-                                {{ $item['name'] }}
-                            </h2>
+                        <div class="flex flex-col md:flex-row gap-6 md:items-center justify-between">
 
-                        <div class="flex items-center gap-3 mt-4">
+                            <!-- Product -->
 
-                            <!-- Decrease -->
+                            <div class="flex items-center gap-5">
 
-                            <form action="{{ route('cart.decrease', $id) }}" method="POST">
-                                @csrf
+                                <!-- Image -->
 
-                                <button
-                                    class="w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 transition flex items-center justify-center"
-                                >
-                                    ➖
-                                </button>
-                            </form>
+                                <div class="w-28 h-32 rounded-2xl overflow-hidden bg-black shrink-0">
 
-                            <!-- Quantity -->
+                                    <img
+                                        src="{{ asset($item['image']) }}"
+                                        alt="{{ $item['name'] }}"
+                                        class="w-full h-full object-cover"
+                                    >
 
-                            <span class="text-lg font-semibold min-w-[30px] text-center">
-                                {{ $item['quantity'] }}
-                            </span>
+                                </div>
 
-                            <!-- Increase -->
+                                <!-- Info -->
 
-                            <form action="{{ route('cart.increase', $id) }}" method="POST">
-                                @csrf
+                                <div>
 
-                                <button
-                                    class="w-10 h-10 rounded-full bg-zinc-800 hover:bg-zinc-700 transition flex items-center justify-center"
-                                >
-                                    ➕
-                                </button>
-                            </form>
+                                    <p class="text-zinc-500 uppercase tracking-[0.2em] text-xs mb-3">
+                                        Premium Streetwear
+                                    </p>
 
-                        </div>
+                                    <h2 class="text-2xl font-semibold mb-3 leading-snug">
+                                        {{ $item['name'] }}
+                                    </h2>
+
+                                    <p class="text-zinc-500 text-sm mb-5">
+                                        Estimated delivery in 3-5 days
+                                    </p>
+
+                                    <!-- Quantity -->
+
+                                    <div class="flex items-center gap-3">
+
+                                        <!-- Decrease -->
+
+                                        <form action="{{ route('cart.decrease', $id) }}" method="POST">
+
+                                            @csrf
+
+                                            <button
+                                                class="w-11 h-11 rounded-full border border-white/10 hover:border-white/20 hover:bg-white hover:text-black transition flex items-center justify-center text-lg"
+                                            >
+                                                −
+                                            </button>
+
+                                        </form>
+
+                                        <!-- Qty -->
+
+                                        <div class="min-w-[50px] h-11 rounded-full bg-black/40 border border-white/10 flex items-center justify-center font-semibold">
+
+                                            {{ $item['quantity'] }}
+
+                                        </div>
+
+                                        <!-- Increase -->
+
+                                        <form action="{{ route('cart.increase', $id) }}" method="POST">
+
+                                            @csrf
+
+                                            <button
+                                                class="w-11 h-11 rounded-full border border-white/10 hover:border-white/20 hover:bg-white hover:text-black transition flex items-center justify-center text-lg"
+                                            >
+                                                +
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Price -->
+
+                            <div class="flex flex-col items-start md:items-end gap-5">
+
+                                <p class="text-3xl font-bold">
+                                    ₹{{ number_format($item['price']) }}
+                                </p>
+
+                                <!-- Remove -->
+
+                                <form action="{{ route('cart.remove', $id) }}" method="POST">
+
+                                    @csrf
+
+                                    <button
+                                        class="text-zinc-500 hover:text-red-400 transition text-sm"
+                                    >
+                                        Remove Item
+                                    </button>
+
+                                </form>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <div class="text-right">
+                @endforeach
 
-                        <p class="text-2xl font-bold mb-4">
-                            ₹{{ number_format($item['price']) }}
+                <!-- Continue Shopping -->
+
+                <div class="pt-4">
+
+                    <a
+                        href="{{ route('shop') }}"
+                        class="inline-flex items-center gap-3 text-zinc-400 hover:text-white transition"
+                    >
+                        ← Continue Shopping
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="lg:sticky lg:top-28">
+
+                <div class="bg-zinc-900/70 backdrop-blur-2xl border border-white/10 rounded-[36px] p-8">
+
+                    <!-- Heading -->
+
+                    <div class="mb-8">
+
+                        <h2 class="text-3xl font-bold mb-3">
+                            Order Summary
+                        </h2>
+
+                        <p class="text-zinc-500">
+                            Review your order before checkout.
                         </p>
 
-                        <form action="{{ route('cart.remove', $id) }}" method="POST">
-                            @csrf
+                    </div>
 
-                            <button class="text-red-400 hover:text-red-300 transition text-sm">
-                                🗑 Remove
+                    <!-- Free Shipping Progress -->
+
+                    @if($total < 2999)
+
+                        <div class="mb-8">
+
+                            <div class="flex items-center justify-between text-sm mb-3">
+
+                                <span class="text-zinc-400">
+                                    Free Shipping Progress
+                                </span>
+
+                                <span class="text-zinc-500">
+                                    ₹{{ 2999 - $total }} away
+                                </span>
+
+                            </div>
+
+                            <div class="w-full h-3 bg-black/40 rounded-full overflow-hidden">
+
+                                <div
+                                    class="h-full bg-white rounded-full"
+                                    style="width: {{ min(($total / 2999) * 100, 100) }}%"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    @endif
+
+                    <!-- Coupon -->
+
+                    <div class="mb-8">
+
+                        <p class="text-sm uppercase tracking-[0.2em] text-zinc-500 mb-4">
+                            Promo Code
+                        </p>
+
+                        <div class="flex gap-3">
+
+                            <input
+                                type="text"
+                                placeholder="Enter code"
+                                class="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-white/20 transition"
+                            >
+
+                            <button
+                                class="bg-white text-black px-6 rounded-2xl font-medium hover:scale-105 transition"
+                            >
+                                Apply
                             </button>
-                        </form>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Pricing -->
+
+                    <div class="space-y-5 border-y border-white/10 py-8 mb-8">
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-zinc-500">
+                                Subtotal
+                            </span>
+
+                            <span class="font-semibold">
+                                ₹{{ number_format($total) }}
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span class="text-zinc-500">
+                                Shipping
+                            </span>
+
+                            <span class="font-semibold">
+
+                                @if($shipping == 0)
+
+                                    Free
+
+                                @else
+
+                                    ₹{{ number_format($shipping) }}
+
+                                @endif
+
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between text-2xl font-bold pt-4">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <span>
+                                ₹{{ number_format($finalTotal) }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Checkout -->
+
+                    <a
+                        href="{{ route('checkout') }}"
+                        class="w-full bg-white text-black py-5 rounded-full font-semibold text-center block hover:scale-[1.02] hover:shadow-2xl hover:shadow-white/10 transition duration-300"
+                    >
+                        Proceed To Checkout
+                    </a>
+
+                    <!-- Trust -->
+
+                    <div class="mt-8 space-y-4 text-sm text-zinc-500">
+
+                        <div class="flex items-center justify-between">
+
+                            <span>
+                                Secure Payments
+                            </span>
+
+                            <span>
+                                🔒
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span>
+                                Easy Returns
+                            </span>
+
+                            <span>
+                                ↩️
+                            </span>
+
+                        </div>
+
+                        <div class="flex items-center justify-between">
+
+                            <span>
+                                Fast Delivery
+                            </span>
+
+                            <span>
+                                🚚
+                            </span>
+
+                        </div>
 
                     </div>
 
                 </div>
-
-            @endforeach
-
-            <div class="flex justify-between items-center pt-10">
-
-                <h2 class="text-3xl font-bold">
-                    Total: ₹{{ number_format($total) }}
-                </h2>
-
-                <a
-                    href="{{ route('checkout') }}"
-                    class="bg-white text-black px-10 py-4 rounded-full font-semibold inline-block"
-                >
-                    Checkout
-                </a>
 
             </div>
 
@@ -122,8 +354,30 @@
 
     @else
 
-        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-10 text-zinc-400">
-            Your cart is empty.
+        <!-- Empty Cart -->
+
+        <div class="bg-zinc-900/70 border border-white/10 rounded-[40px] p-16 text-center">
+
+            <div class="text-8xl mb-8">
+                🛒
+            </div>
+
+            <h2 class="text-4xl font-bold mb-5">
+                Your Cart Is Empty
+            </h2>
+
+            <p class="text-zinc-500 text-lg mb-10 max-w-xl mx-auto">
+                Looks like you haven’t added anything yet.
+                Explore premium streetwear collections now.
+            </p>
+
+            <a
+                href="{{ route('shop') }}"
+                class="inline-block bg-white text-black px-10 py-5 rounded-full font-semibold hover:scale-105 transition"
+            >
+                Explore Collection
+            </a>
+
         </div>
 
     @endif

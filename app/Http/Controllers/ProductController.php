@@ -8,8 +8,14 @@ class ProductController extends Controller
 {
     public function show(Product $product)
     {
+        $relatedProducts = Product::where('id', '!=', $product->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
         return view('pages.product', [
-            'product' => $product
+            'product' => $product,
+            'relatedProducts' => $relatedProducts,
         ]);
     }
 }

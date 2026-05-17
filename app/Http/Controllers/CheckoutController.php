@@ -67,4 +67,10 @@ class CheckoutController extends Controller
 
         return redirect()->route('payment.show', $order);
     }
+public function payment()
+{
+    $cart = session()->get('cart', []);
+
+    return view('pages.payment', compact('cart'));
+}
 }
